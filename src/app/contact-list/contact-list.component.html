@@ -1,0 +1,49 @@
+<div class="row justify-content-center mb-4">
+  <div class="col-2">
+    <button type="button" class="btn btn-primary" [routerLink]="['/contact']">
+      Adicionar contato
+    </button>
+  </div>
+</div>
+<div class="row row-cols-1 row-cols-md-2 g-4">
+  <ng-container *ngIf="persons.length; else noPersons">
+    <div class="col" *ngFor="let person of persons">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">{{ person.name }}</h5>
+          <ng-container *ngIf="person.contacts.length; else noContacts">
+            <p class="card-text" *ngFor="let contact of person.contacts">
+              <i
+                class="bi"
+                [ngClass]="{
+                  'bi-telephone': contact.contactType == contactTypes.Telephone,
+                  'bi-whatsapp': contact.contactType == contactTypes.Whatsapp,
+                  'bi-envelope': contact.contactType == contactTypes.Email
+                }"
+              ></i>
+              {{ contact.contact }}
+            </p>
+          </ng-container>
+          <button
+            type="button"
+            class="btn btn-warning"
+            style="margin-right: 5px"
+          >
+            <img src="assets/svg/pencil-square.svg" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="deletePerson(person.id)"
+          >
+            <img src="assets/svg/trash.svg" />
+          </button>
+          <ng-template #noContacts>
+            <p>Esta pessoa ainda não tem contatos cadastrados.</p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #noPersons> Nenhum contato encontrado. :( </ng-template>
+</div>
