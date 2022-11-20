@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ContactTypes } from '../enums/contactTypes.enum';
 import { Person } from '../contact/models/person.model';
 import { PersonService } from '../contact/services/person.service';
+import { ContactService } from '../contact/services/contact.service';
 
 @Component({
   selector: 'app-contact-list',
@@ -11,7 +12,10 @@ import { PersonService } from '../contact/services/person.service';
 export class ContactListComponent implements OnInit {
   persons: Person[] = [];
 
-  constructor(private personService: PersonService) {}
+  constructor(
+    private personService: PersonService,
+    private contactService: ContactService
+  ) {}
 
   ngOnInit(): void {
     this.personService.getAllPersons().subscribe(
@@ -30,5 +34,14 @@ export class ContactListComponent implements OnInit {
       .subscribe(
         (res) => (this.persons = this.persons.filter((p) => p.id != personId))
       );
+  }
+
+  deleteContact(contactId: number, personId: number): void {
+    this.contactService.deleteContact(contactId).subscribe((res) => {
+      const personIndex = this.persons.findIndex((p) => p.id == personId);
+      this.persons[personIndex].contacts = this.persons[
+        personIndex
+      ].contacts.filter((c) => c.id != contactId);
+    });
   }
 }

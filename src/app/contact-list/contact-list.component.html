@@ -5,42 +5,69 @@
     </button>
   </div>
 </div>
-<div class="row row-cols-1 row-cols-md-2 g-4">
+<div class="row row-cols-2 row-cols-md-2 g-4">
   <ng-container *ngIf="persons.length; else noPersons">
     <div class="col" *ngFor="let person of persons">
       <div class="card text-center">
-        <div class="card-body">
+        <div class="row card-body align-items-start justify-content-between">
           <h5 class="card-title">{{ person.name }}</h5>
           <ng-container *ngIf="person.contacts.length; else noContacts">
-            <p class="card-text" *ngFor="let contact of person.contacts">
-              <i
-                class="bi"
-                [ngClass]="{
-                  'bi-telephone': contact.contactType == contactTypes.Telephone,
-                  'bi-whatsapp': contact.contactType == contactTypes.Whatsapp,
-                  'bi-envelope': contact.contactType == contactTypes.Email
-                }"
-              ></i>
-              {{ contact.contact }}
-            </p>
+            <ng-container *ngFor="let contact of person.contacts">
+              <div class="row align-items-start justify-content-between mt-2">
+                <div class="col-11">
+                  <p class="card-text">
+                    <i
+                      class="bi"
+                      [ngClass]="{
+                        'bi-telephone':
+                          contact.contactType == contactTypes.Telephone,
+                        'bi-whatsapp':
+                          contact.contactType == contactTypes.Whatsapp,
+                        'bi-envelope': contact.contactType == contactTypes.Email
+                      }"
+                    ></i>
+                    {{ contact.contact }}
+                  </p>
+                </div>
+                <div class="col-1">
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    (click)="deleteContact(contact.id, person.id)"
+                  >
+                    <img src="assets/svg/trash.svg" />
+                  </button>
+                </div>
+              </div>
+            </ng-container>
           </ng-container>
-          <button
-            type="button"
-            class="btn btn-warning"
-            style="margin-right: 5px"
-          >
-            <img src="assets/svg/pencil-square.svg" />
-          </button>
-          <button
-            type="button"
-            class="btn btn-danger"
-            (click)="deletePerson(person.id)"
-          >
-            <img src="assets/svg/trash.svg" />
-          </button>
           <ng-template #noContacts>
             <p>Esta pessoa ainda não tem contatos cadastrados.</p>
           </ng-template>
+        </div>
+        <div class="card-footer">
+          <div class="row">
+            <div class="col-6">
+              <button
+                type="button"
+                class="btn btn-warning margin-btn-edit"
+                [routerLink]="['../contact/edit', person.id]"
+              >
+                Editar contato
+                <img src="assets/svg/pencil-square.svg" />
+              </button>
+            </div>
+            <div class="col-6">
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="deletePerson(person.id)"
+              >
+                Excluir contato
+                <img src="assets/svg/trash.svg" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -14,11 +14,15 @@ export class ContactService {
     return this.httpClient.post<Contact[]>(API_URL, contacts);
   }
 
-  updateContact(contact: Contact): Observable<Contact> {
-    return this.httpClient.put<Contact>(`${API_URL}/${contact.id}`, contact);
+  updateContacts(contacts: Contact[]): Observable<Contact[]> {
+    return this.httpClient.put<Contact[]>(`${API_URL}`, contacts);
   }
 
   deleteContact(contactId: number): Observable<any> {
     return this.httpClient.delete<any>(`${API_URL}/${contactId}`);
+  }
+
+  deleteContacts(contactIds: number[]): Observable<any> {
+    return this.httpClient.delete<any>(`${API_URL}`, { body: contactIds });
   }
 }

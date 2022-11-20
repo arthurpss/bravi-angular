@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
@@ -7,6 +7,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./person.component.css'],
 })
 export class PersonComponent implements OnInit {
+  // @Input() name!: string;
   form!: FormGroup;
   constructor(private fb: FormBuilder) {}
 
