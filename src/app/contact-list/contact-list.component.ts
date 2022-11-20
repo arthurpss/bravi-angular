@@ -3,6 +3,7 @@ import { ContactTypes } from '../enums/contactTypes.enum';
 import { Person } from '../contact/models/person.model';
 import { PersonService } from '../contact/services/person.service';
 import { ContactService } from '../contact/services/contact.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-contact-list',
@@ -14,13 +15,16 @@ export class ContactListComponent implements OnInit {
 
   constructor(
     private personService: PersonService,
-    private contactService: ContactService
+    private contactService: ContactService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
+    this.spinner.show();
     this.personService.getAllPersons().subscribe(
       (res) => (this.persons = res),
-      (err) => console.log('Erro ao encontrar contatos.')
+      (err) => console.log('Erro ao encontrar contatos.'),
+      () => this.spinner.hide()
     );
   }
 
@@ -29,11 +33,12 @@ export class ContactListComponent implements OnInit {
   }
 
   deletePerson(personId: number): void {
-    this.personService
-      .deletePerson(personId)
-      .subscribe(
-        (res) => (this.persons = this.persons.filter((p) => p.id != personId))
-      );
+    this.spinner.show();
+    this.personService.deletePerson(personId).subscribe(
+      (res) => (this.persons = this.persons.filter((p) => p.id != personId)),
+      (err) => console.log('Erro ao encontrar contatos.'),
+      () => this.spinner.hide()
+    );
   }
 
   deleteContact(contactId: number, personId: number): void {

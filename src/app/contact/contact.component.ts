@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { forkJoin, mergeMap } from 'rxjs';
 import { Contact } from './models/contact.model';
 import { Person } from './models/person.model';
@@ -25,7 +26,8 @@ export class ContactComponent implements OnInit {
     private contactService: ContactService,
     private personService: PersonService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -35,20 +37,26 @@ export class ContactComponent implements OnInit {
 
     const personId = Number(this.route.snapshot.paramMap.get('id'));
     if (personId) {
-      this.personService.getPersonById(personId).subscribe((response) => {
-        this.person = response;
-        this.isEdit = true;
-        this.person.contacts.forEach((p) => {
-          this.contacts.push(this.fb.group(p));
-        });
-        this.personComponent.form.get('name')?.setValue(this.person.name);
-      });
+      this.spinner.show();
+      this.personService.getPersonById(personId).subscribe(
+        (response) => {
+          this.person = response;
+          this.isEdit = true;
+          this.person.contacts.forEach((p) => {
+            this.contacts.push(this.fb.group(p));
+          });
+          this.personComponent.form.get('name')?.setValue(this.person.name);
+        },
+        (err) => console.log(err),
+        () => this.spinner.hide()
+      );
     } else {
       this.addContact();
     }
   }
 
   submit() {
+    this.spinner.show();
     let person: Person;
     if (this.isEdit) {
       person = {
@@ -68,10 +76,12 @@ export class ContactComponent implements OnInit {
       forkJoin(observers).subscribe(() => {
         if (this.deletedContacts.length) {
           const deletedIds: number[] = this.deletedContacts.map((dc) => dc.id);
-          this.contactService
-            .deleteContacts(deletedIds)
-            .subscribe(() => this.router.navigate(['contact-list']));
+          this.contactService.deleteContacts(deletedIds).subscribe(() => {
+            this.spinner.hide();
+            this.router.navigate(['contact-list']);
+          });
         } else {
+          this.spinner.hide();
           this.router.navigate(['contact-list']);
         }
       });
@@ -91,6 +101,7 @@ export class ContactComponent implements OnInit {
           })
         )
         .subscribe(() => {
+          this.spinner.hide();
           this.router.navigate(['contact-list']);
         });
     }

@@ -7,7 +7,6 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./person.component.css'],
 })
 export class PersonComponent implements OnInit {
-  // @Input() name!: string;
   form!: FormGroup;
   constructor(private fb: FormBuilder) {}
 
