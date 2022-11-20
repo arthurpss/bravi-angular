@@ -1,50 +1,62 @@
-<div class="row justify-content-center">
-  <div class="col-12">
-    <form [formGroup]="form" (submit)="submit()">
-      <div class="row">
-        <label class="form-label">Tipo</label>
-        <div class="input-group mb-1">
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              id="telefone"
-              formControlName="contactType"
-              [value]="0"
-            />
-            <label class="form-check-label" for="telefone"> Telefone </label>
+<app-person></app-person>
+<!-- <div class="row "> -->
+<form class="mt-10" [formGroup]="form" (submit)="submit()">
+  <ng-container formArrayName="contacts">
+    <ng-container *ngFor="let contactForm of formGroups; let i = index">
+      <div [formGroup]="contactForm">
+        <div class="row mt-2">
+          <label class="form-label">Contato</label>
+          <div class="input-group mb-1">
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                id="telefone"
+                formControlName="contactType"
+                [value]="0"
+              />
+              <label class="form-check-label" for="telefone"> Telefone </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                id="email"
+                formControlName="contactType"
+                [value]="1"
+              />
+              <label class="form-check-label" for="email"> Email </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                id="whatsapp"
+                formControlName="contactType"
+                [value]="2"
+              />
+              <label class="form-check-label" for="whatsapp"> Whatsapp </label>
+            </div>
           </div>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              id="email"
-              formControlName="contactType"
-              [value]="1"
-            />
-            <label class="form-check-label" for="email"> Email </label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              id="whatsapp"
-              formControlName="contactType"
-              [value]="2"
-            />
-            <label class="form-check-label" for="whatsapp"> Whatsapp </label>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <input class="form-control" formControlName="contact" />
           </div>
         </div>
       </div>
-      <div class="row">
-        <label for="contact" class="form-label">Contato</label>
-        <input class="form-control" formControlName="contact" rows="3" />
-      </div>
-      <div class="row justify-content-center mt-2">
-        <div class="col-1">
-          <button type="submit" class="btn btn-primary">Adicionar</button>
-        </div>
-      </div>
-    </form>
+    </ng-container>
+  </ng-container>
+  <div class="row mt-2">
+    <div class="col-4">
+      <button type="button" class="btn btn-primary" (click)="addContact()">
+        Adicionar
+        <!-- <img src="assets/svg/plus-square.svg" />  -->
+      </button>
+    </div>
+    <div class="col-1">
+      <button type="submit" class="btn btn-primary">Salvar</button>
+    </div>
   </div>
-</div>
+</form>
+<!-- </div> -->

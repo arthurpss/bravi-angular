@@ -10,11 +10,6 @@ const routes: Routes = [
       import('./contact/contact.module').then((m) => m.ContactModule),
   },
   {
-    path: 'person',
-    loadChildren: () =>
-      import('./person/person.module').then((m) => m.PersonModule),
-  },
-  {
     path: 'contact-list',
     loadChildren: () =>
       import('./contact-list/contact-list.module').then(

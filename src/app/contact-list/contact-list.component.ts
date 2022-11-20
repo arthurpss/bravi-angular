@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ContactTypes } from '../enums/contactTypes.enum';
-import { Person } from '../person/models/person.model';
-import { PersonService } from '../person/services/person.service';
+import { Person } from '../contact/models/person.model';
+import { PersonService } from '../contact/services/person.service';
 
 @Component({
   selector: 'app-contact-list',

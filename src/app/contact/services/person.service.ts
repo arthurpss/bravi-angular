@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Person } from '../models/person.model';
+import { Person } from '../../contact/models/person.model';
 
 const API_URL = environment.BASE_API + 'person';
 
@@ -10,7 +10,7 @@ const API_URL = environment.BASE_API + 'person';
 export class PersonService {
   constructor(private httpClient: HttpClient) {}
 
-  createPerson(person: Person): Observable<Person> {
+  createPerson(person: Person): Observable<any> {
     return this.httpClient.post<Person>(API_URL, person);
   }
 

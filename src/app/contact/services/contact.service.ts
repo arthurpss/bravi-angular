@@ -10,8 +10,8 @@ const API_URL = environment.BASE_API + 'contact';
 export class ContactService {
   constructor(private httpClient: HttpClient) {}
 
-  createContact(contact: Contact): Observable<Contact> {
-    return this.httpClient.post<Contact>(API_URL, contact);
+  createContacts(contacts: Contact[]): Observable<Contact[]> {
+    return this.httpClient.post<Contact[]>(API_URL, contacts);
   }
 
   updateContact(contact: Contact): Observable<Contact> {
