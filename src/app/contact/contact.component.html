@@ -1,5 +1,4 @@
 <app-person></app-person>
-<!-- <div class="row "> -->
 <form class="mt-10" [formGroup]="form" (submit)="submit()">
   <ng-container formArrayName="contacts">
     <ng-container *ngFor="let contactForm of formGroups; let i = index">
@@ -51,7 +50,6 @@
     <div class="col-4">
       <button type="button" class="btn btn-primary" (click)="addContact()">
         Adicionar
-        <!-- <img src="assets/svg/plus-square.svg" />  -->
       </button>
     </div>
     <div class="col-1">
@@ -59,4 +57,3 @@
     </div>
   </div>
 </form>
-<!-- </div> -->
