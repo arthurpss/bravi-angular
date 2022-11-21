@@ -3,6 +3,6 @@ https://teste-bravi.netlify.app/
 
 node version: 18.12 [lts]
 
-Execute:
-npm i
-npm start
+# Run:
+1. npm i
+2. npm start
