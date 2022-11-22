@@ -4,7 +4,7 @@
     <ng-container *ngFor="let contactForm of formGroups; let i = index">
       <div [formGroup]="contactForm">
         <div class="row mt-2">
-          <label class="form-label">Contato</label>
+          <label class="form-label">Contato *</label>
           <div class="input-group mb-1">
             <div class="form-check form-check-inline">
               <input
@@ -40,7 +40,19 @@
         </div>
         <div class="row">
           <div class="col-8">
-            <input class="form-control" formControlName="contact" />
+            <input
+              [type]="
+                contactForm.get('contactType')?.value !== 1 ? 'text' : 'email'
+              "
+              [email]="contactForm.get('contactType')?.value === 1"
+              class="form-control"
+              formControlName="contact"
+              [mask]="
+                contactForm.get('contactType')?.value !== 1
+                  ? '(00) 0000-0000'
+                  : ''
+              "
+            />
           </div>
           <div class="col-4">
             <button

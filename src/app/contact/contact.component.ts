@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { forkJoin, mergeMap } from 'rxjs';
@@ -38,72 +38,93 @@ export class ContactComponent implements OnInit {
     const personId = Number(this.route.snapshot.paramMap.get('id'));
     if (personId) {
       this.spinner.show();
-      this.personService.getPersonById(personId).subscribe(
-        (response) => {
-          this.person = response;
-          this.isEdit = true;
-          this.person.contacts.forEach((p) => {
-            this.contacts.push(this.fb.group(p));
-          });
-          this.personComponent.form.get('name')?.setValue(this.person.name);
-        },
-        (err) => console.log(err),
-        () => this.spinner.hide()
-      );
+      this.personService
+        .getPersonById(personId)
+        .subscribe(
+          (response) => {
+            this.person = response;
+            this.isEdit = true;
+            this.person.contacts.forEach((p) => {
+              this.contacts.push(
+                this.fb.group({
+                  contactType: [p.contactType, Validators.required],
+                  contact: [p.contact, Validators.required],
+                })
+              );
+            });
+            this.personComponent.form.get('name')?.setValue(this.person.name);
+          },
+          (err) => console.log(err)
+        )
+        .add(() => this.spinner.hide());
     } else {
       this.addContact();
     }
   }
 
   submit() {
-    this.spinner.show();
-    let person: Person;
-    if (this.isEdit) {
-      person = {
-        id: this.person.id,
-        ...this.personComponent.form.value,
-      };
+    console.log(this.form.valid && this.personComponent.form.valid);
 
-      const contacts: Contact[] = this.form.value.contacts.map((c: Contact) => {
-        return { ...c, person: this.person.id };
-      });
+    if (this.form.valid && this.personComponent.form.valid) {
+      this.spinner.show();
+      let person: Person;
+      if (this.isEdit) {
+        person = {
+          id: this.person.id,
+          ...this.personComponent.form.value,
+        };
 
-      const observers = {
-        updatePerson: this.personService.updatePerson(person),
-        updateContacts: this.contactService.updateContacts(contacts),
-      };
+        const contacts: Contact[] = this.form.value.contacts.map(
+          (c: Contact) => {
+            return { ...c, person: this.person.id };
+          }
+        );
 
-      forkJoin(observers).subscribe(() => {
-        if (this.deletedContacts.length) {
-          const deletedIds: number[] = this.deletedContacts.map((dc) => dc.id);
-          this.contactService.deleteContacts(deletedIds).subscribe(() => {
+        const observers = {
+          updatePerson: this.personService.updatePerson(person),
+          updateContacts: this.contactService.updateContacts(contacts),
+        };
+
+        forkJoin(observers)
+          .subscribe(() => {
+            if (this.deletedContacts.length) {
+              const deletedIds: number[] = this.deletedContacts.map(
+                (dc) => dc.id
+              );
+              this.contactService
+                .deleteContacts(deletedIds)
+                .subscribe(() => {
+                  this.router.navigate(['contact-list']);
+                })
+                .add(() => this.spinner.hide());
+            }
+          })
+          .add(() => {
             this.spinner.hide();
             this.router.navigate(['contact-list']);
           });
-        } else {
-          this.spinner.hide();
-          this.router.navigate(['contact-list']);
-        }
-      });
-    } else {
-      person = this.personComponent.form.value;
+      } else {
+        person = this.personComponent.form.value;
 
-      this.personService
-        .createPerson(person)
-        .pipe(
-          mergeMap((res) => {
-            const contacts: Contact[] = this.form.value.contacts.map(
-              (c: Contact) => {
-                return { ...c, person: res.identifiers[0].id };
-              }
-            );
-            return this.contactService.createContacts(contacts);
+        this.personService
+          .createPerson(person)
+          .pipe(
+            mergeMap((res) => {
+              const contacts: Contact[] = this.form.value.contacts.map(
+                (c: Contact) => {
+                  return { ...c, person: res.identifiers[0].id };
+                }
+              );
+              return this.contactService.createContacts(contacts);
+            })
+          )
+          .subscribe(() => {
+            this.router.navigate(['contact-list']);
           })
-        )
-        .subscribe(() => {
-          this.spinner.hide();
-          this.router.navigate(['contact-list']);
-        });
+          .add(() => {
+            this.spinner.hide();
+          });
+      }
     }
   }
 
@@ -118,8 +139,8 @@ export class ContactComponent implements OnInit {
 
   private emptyContact(): FormGroup {
     return this.fb.group({
-      contactType: null,
-      contact: null,
+      contactType: [null, Validators.required],
+      contact: [null, Validators.required],
     });
   }
 
