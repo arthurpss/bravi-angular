@@ -65,8 +65,6 @@ export class ContactComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.form.valid && this.personComponent.form.valid);
-
     if (this.form.valid && this.personComponent.form.valid) {
       this.spinner.show();
       let person: Person;
@@ -135,6 +133,10 @@ export class ContactComponent implements OnInit {
             this.spinner.hide();
           });
       }
+    } else {
+      this.toastr.error(
+        'Campos obrigatórios não preenchidos ou preenchidos incorretamente.'
+      );
     }
   }
 
