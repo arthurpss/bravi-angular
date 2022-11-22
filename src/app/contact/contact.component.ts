@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 import { forkJoin, mergeMap } from 'rxjs';
 import { Contact } from './models/contact.model';
 import { Person } from './models/person.model';
@@ -27,7 +28,8 @@ export class ContactComponent implements OnInit {
     private personService: PersonService,
     private route: ActivatedRoute,
     private router: Router,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -86,19 +88,23 @@ export class ContactComponent implements OnInit {
         };
 
         forkJoin(observers)
-          .subscribe(() => {
-            if (this.deletedContacts.length) {
-              const deletedIds: number[] = this.deletedContacts.map(
-                (dc) => dc.id
-              );
-              this.contactService
-                .deleteContacts(deletedIds)
-                .subscribe(() => {
-                  this.router.navigate(['contact-list']);
-                })
-                .add(() => this.spinner.hide());
-            }
-          })
+          .subscribe(
+            () => {
+              this.toastr.success('Contato editado');
+              if (this.deletedContacts.length) {
+                const deletedIds: number[] = this.deletedContacts.map(
+                  (dc) => dc.id
+                );
+                this.contactService
+                  .deleteContacts(deletedIds)
+                  .subscribe(() => {
+                    this.router.navigate(['contact-list']);
+                  })
+                  .add(() => this.spinner.hide());
+              }
+            },
+            (err) => this.toastr.error('Erro ao editar contato')
+          )
           .add(() => {
             this.spinner.hide();
             this.router.navigate(['contact-list']);
@@ -118,9 +124,13 @@ export class ContactComponent implements OnInit {
               return this.contactService.createContacts(contacts);
             })
           )
-          .subscribe(() => {
-            this.router.navigate(['contact-list']);
-          })
+          .subscribe(
+            () => {
+              this.toastr.success('Contato criado');
+              this.router.navigate(['contact-list']);
+            },
+            (err) => this.toastr.error('Erro ao editar contato')
+          )
           .add(() => {
             this.spinner.hide();
           });

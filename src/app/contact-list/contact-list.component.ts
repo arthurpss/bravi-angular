@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ContactTypes } from '../enums/contactTypes.enum';
-import { Person } from '../contact/models/person.model';
-import { PersonService } from '../contact/services/person.service';
-import { ContactService } from '../contact/services/contact.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
+import { Person } from '../contact/models/person.model';
+import { ContactService } from '../contact/services/contact.service';
+import { PersonService } from '../contact/services/person.service';
+import { ContactTypes } from '../enums/contactTypes.enum';
 
 @Component({
   selector: 'app-contact-list',
@@ -16,14 +17,15 @@ export class ContactListComponent implements OnInit {
   constructor(
     private personService: PersonService,
     private contactService: ContactService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
     this.spinner.show();
     this.personService.getAllPersons().subscribe(
       (res) => (this.persons = res),
-      (err) => console.log('Erro ao encontrar contatos.'),
+      (err) => this.toastr.error('Erro ao buscar contatos'),
       () => this.spinner.hide()
     );
   }
@@ -34,19 +36,30 @@ export class ContactListComponent implements OnInit {
 
   deletePerson(personId: number): void {
     this.spinner.show();
-    this.personService.deletePerson(personId).subscribe(
-      (res) => (this.persons = this.persons.filter((p) => p.id != personId)),
-      (err) => console.log('Erro ao encontrar contatos.'),
-      () => this.spinner.hide()
-    );
+    this.personService
+      .deletePerson(personId)
+      .subscribe(
+        (res) => {
+          this.persons = this.persons.filter((p) => p.id != personId);
+          this.toastr.success('Contato excluído');
+        },
+        (err) => this.toastr.error('Erro ao deletar contato')
+      )
+      .add(() => this.spinner.hide());
   }
 
   deleteContact(contactId: number, personId: number): void {
-    this.contactService.deleteContact(contactId).subscribe((res) => {
-      const personIndex = this.persons.findIndex((p) => p.id == personId);
-      this.persons[personIndex].contacts = this.persons[
-        personIndex
-      ].contacts.filter((c) => c.id != contactId);
-    });
+    this.contactService.deleteContact(contactId).subscribe(
+      (res) => {
+        const personIndex = this.persons.findIndex((p) => p.id == personId);
+        this.persons[personIndex].contacts = this.persons[
+          personIndex
+        ].contacts.filter((c) => c.id != contactId);
+        this.toastr.success('Contato excluído');
+      },
+      (err) => {
+        this.toastr.error('Erro ao deletar contato');
+      }
+    );
   }
 }

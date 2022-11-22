@@ -156,7 +156,7 @@
     "uuid" "8.3.2"
     "yargs" "17.5.1"
 
-"@angular/common@^14.0.0", "@angular/common@^14.1.0", "@angular/common@^14.2.0", "@angular/common@>=10.0.0", "@angular/common@14.2.11":
+"@angular/common@^14.0.0", "@angular/common@^14.1.0", "@angular/common@^14.2.0", "@angular/common@>=10.0.0", "@angular/common@>=14.0.0-0", "@angular/common@14.2.11":
   "integrity" "sha512-a5w7lz4SoUzCwSDnuUPnfbEYPA8ufFiXz44mOv48P4uIb78q3rZ/R/EyWD1O3yJPof0o8aPNKpKZzuRDv3Q8ow=="
   "resolved" "https://registry.npmjs.org/@angular/common/-/common-14.2.11.tgz"
   "version" "14.2.11"
@@ -186,7 +186,7 @@
   dependencies:
     "tslib" "^2.3.0"
 
-"@angular/core@^14.0.0", "@angular/core@^14.1.0", "@angular/core@^14.2.0", "@angular/core@>=10.0.0", "@angular/core@14.2.11":
+"@angular/core@^14.0.0", "@angular/core@^14.1.0", "@angular/core@^14.2.0", "@angular/core@>=10.0.0", "@angular/core@>=14.0.0-0", "@angular/core@14.2.11":
   "integrity" "sha512-4uEIA6ESMLt2f/ivKuVBpME0IbuFHWmpweN4dwJt83DfJBiBfpqdrFYZHz/Kbkh9cGCiP7L4/eKPRWTlAHehhw=="
   "resolved" "https://registry.npmjs.org/@angular/core/-/core-14.2.11.tgz"
   "version" "14.2.11"
@@ -216,7 +216,7 @@
   dependencies:
     "tslib" "^2.3.0"
 
-"@angular/platform-browser@^14.2.0", "@angular/platform-browser@14.2.11":
+"@angular/platform-browser@^14.2.0", "@angular/platform-browser@>=14.0.0-0", "@angular/platform-browser@14.2.11":
   "integrity" "sha512-lGi9pF0Kf/GGrVKcfxxfStM2eMSluDTmbcYuVAX28iBn5XEdfsonrkfy2cnxUMnQ7nioMAZBNGOJHbQPKz4jwg=="
   "resolved" "https://registry.npmjs.org/@angular/platform-browser/-/platform-browser-14.2.11.tgz"
   "version" "14.2.11"
@@ -4252,6 +4252,13 @@
   "integrity" "sha512-rz7wRCW4L+eZStpWwKUZ8mW+1WWtVEs1DZLDT1DUx1v3k+pLh5BhoDzfF1YySxTqZX13I7pwl13urqzniQ/jXQ=="
   "resolved" "https://registry.npmjs.org/ngx-spinner/-/ngx-spinner-14.0.0.tgz"
   "version" "14.0.0"
+  dependencies:
+    "tslib" "^2.3.0"
+
+"ngx-toastr@15.0.0":
+  "integrity" "sha512-dseyONSYcbm+8hQUCzzyP6CnHGa8WAOGJN7dzGqgBV4sHCDiv5eZ4x/3uo7Fov2OR0O5T47keP7ND3z7tufXeg=="
+  "resolved" "https://registry.npmjs.org/ngx-toastr/-/ngx-toastr-15.0.0.tgz"
+  "version" "15.0.0"
   dependencies:
     "tslib" "^2.3.0"
 
