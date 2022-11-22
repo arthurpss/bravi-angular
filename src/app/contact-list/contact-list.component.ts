@@ -23,11 +23,13 @@ export class ContactListComponent implements OnInit {
 
   ngOnInit(): void {
     this.spinner.show();
-    this.personService.getAllPersons().subscribe(
-      (res) => (this.persons = res),
-      (err) => this.toastr.error('Erro ao buscar contatos'),
-      () => this.spinner.hide()
-    );
+    this.personService
+      .getAllPersons()
+      .subscribe(
+        (res) => (this.persons = res),
+        (err) => this.toastr.error('Erro ao buscar contatos')
+      )
+      .add(() => this.spinner.hide());
   }
 
   get contactTypes(): typeof ContactTypes {
